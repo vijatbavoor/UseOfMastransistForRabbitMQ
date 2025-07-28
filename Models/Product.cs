@@ -31,4 +31,4 @@ namespace UseOfMastransistForRabbitMQ.Models
         public bool IsActive { get; set; }
         public DateTime? LastSoldAt { get; set; }
     }
-}+
+}

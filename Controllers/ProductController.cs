@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
 using UseOfMastransistForRabbitMQ.Models;
-using MassTransit
+using MassTransit;
 
 namespace UseOfMastransistForRabbitMQ.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProductController(IPublishEndpoint publishEndpoint) : ControllerBase
+    public class ProductController(IProductCreatePublisher productCreatePublisher) : ControllerBase
     {
         // In-memory product list for demonstration
         private static readonly List<Product> Products = new();
@@ -31,9 +29,10 @@ namespace UseOfMastransistForRabbitMQ.Controllers
         [HttpPost]
         public ActionResult<Product> Create(Product product)
         {
-
+            productCreatePublisher.PublishProductCreated(product); ;
             Products.Add(product);
-            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+            //return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+            return product;
         }
 
         [HttpPut("{id}")]

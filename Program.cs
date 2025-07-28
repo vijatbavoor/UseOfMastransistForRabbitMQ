@@ -20,7 +20,11 @@ builder.Services.AddMassTransit(x =>
         });
         cfg.ConfigureEndpoints(context);
     });
+    x.AddConsumer<ProductCreatedConsumer>();
 });
+
+builder.Services.AddScoped<IProductCreatedConsumer, ProductCreatedConsumer>();
+builder.Services.AddScoped<IProductCreatePublisher, ProductCreatePublisher>();
 
 var app = builder.Build();
 
