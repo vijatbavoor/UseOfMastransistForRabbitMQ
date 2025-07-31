@@ -10,7 +10,10 @@ public class ProductCreatePublisher(IPublishEndpoint publishEndpoint, ILogger<Pr
     {
         if (product == null) throw new ArgumentNullException(nameof(product));
 
-        await _publishEndpoint.Publish(product);
+        await _publishEndpoint.Publish(product, context =>
+        {
+            context.SetRoutingKey("product.created"); // Set the routing key for the published message
+        });
         _logger.LogInformation($"Product Published: {product.Name} (ID: {product.Id}) - Price: ₹{product.Price}");
     }
 }

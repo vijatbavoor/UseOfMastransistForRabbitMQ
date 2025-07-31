@@ -1,4 +1,5 @@
 using MassTransit;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +20,25 @@ builder.Services.AddMassTransit(x =>
             h.Password("guest");
         });
         cfg.ConfigureEndpoints(context);
+        cfg.ReceiveEndpoint("product-created-queue", e =>
+        {
+            e.Bind("product.created", x =>
+            {
+                x.ExchangeType = ExchangeType.Direct; // Ensure the exchange type matches
+                x.RoutingKey = "product.created"; // Set the routing key for the receive endpoint
+            });
+        });
+         cfg.ReceiveEndpoint("order-product-created-queue", e =>
+        {
+            e.Bind("product.created", x =>
+            {
+                x.ExchangeType = ExchangeType.Direct; // Ensure the exchange type matches
+                x.RoutingKey = "product.created"; // Set the routing key for the receive endpoint
+            });
+        });
     });
-    x.AddConsumer<ProductCreatedConsumer>();
+    x.AddConsumer<ProductCreatedConsumer>(); //I can remove this line as the consumer is configured in the receive endpoint
+    x.AddConsumer<OrderCreatedConsumer>();
 });
 
 builder.Services.AddScoped<IProductCreatedConsumer, ProductCreatedConsumer>();

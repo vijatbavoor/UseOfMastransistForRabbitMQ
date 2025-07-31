@@ -29,7 +29,7 @@ namespace UseOfMastransistForRabbitMQ.Controllers
         [HttpPost]
         public ActionResult<Product> Create(Product product)
         {
-            productCreatePublisher.PublishProductCreated(product); ;
+            productCreatePublisher.PublishProductCreated(product);
             Products.Add(product);
             //return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
             return product;
